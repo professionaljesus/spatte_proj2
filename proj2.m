@@ -1,1 +1,2 @@
-% I like rain
+load("HA2_Brazil.mat")
+!cmd

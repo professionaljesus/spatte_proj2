@@ -1,2 +1,8 @@
+clear
+close all
 load("HA2_Brazil.mat")
-A = 1;
+
+E = Insurance(:,1);
+
+
+

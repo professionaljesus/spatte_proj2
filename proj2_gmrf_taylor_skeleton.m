@@ -16,9 +16,6 @@ function [logp, D_logp, D2_logp]= proj2_gmrf_taylor_skeleton(x_0, y, A, Q, E, pa
 
 % $Id: gmrf_taylor_skeleton.m 5107 2017-11-12 13:35:17Z johanl $
 
-% Remove this line from your copy:
-error('This is only a skeleton function!  Copy it, rename, and fill in the blanks!')
-
 %ensure that E=1 if E not given (i.e. same/no population weight in all regions)
 if nargin<5, E=1; end
 if nargin<6, par=[]; end
@@ -26,10 +23,10 @@ if nargin<6, par=[]; end
 %compute observed part of the field
 z = A*x_0;
 %compute log( p(y|z,theta) )
-f = []; %log_p(y
+f = -log(factorial(y)) + y*(log(E + z)) - E*exp(z); %log_p(y
 
 %compute -log p(x|y,theta)
-logp = [] - sum(f);
+logp = 0.5*x_0'*Q*x_0 - sum(f);
 
 if nargout>1
   %compute derivatives (if needed, i.e. nargout>1)

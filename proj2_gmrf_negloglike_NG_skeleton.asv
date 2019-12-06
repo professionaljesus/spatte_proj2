@@ -24,14 +24,14 @@ if nargin<9, E=1; end
 [tau, q_e] = exp(theta);
 kappa = 0; %?
 %compute Q matrices  (for an intrinsic CAR(1) or SAR(1) process)
-Q_x = tau*(kappa*eye(size(G)) + G)'(kappa*eye(size(G)) + G)
+Q_x = sparse(tau*(kappa*eye(size(G)) + G)'*(kappa*eye(size(G)) + G));
 %compute Q for beta-parameters
 Qbeta = 1e-6*speye(size(B,2));
 
 %combine all components of Q using blkdiag
-Qall = blkdiag([],[],[]);
+Qall = blkdiag(Q_x,Qbeta);
 %also compute the observation matric by combining A and B matrices
-Aall = [];
+Aall = []; %(N+Nbeta)x(N+Nbeta) 
 
 %declare x_mode as global so that we start subsequent optimisations from
 %the previous mode (speeds up nested optimisation).

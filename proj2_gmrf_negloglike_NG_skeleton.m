@@ -31,7 +31,7 @@ Qbeta = 1e-6*speye(size(B,2));
 %combine all components of Q using blkdiag
 Qall = blkdiag(Q_x,Qbeta);
 %also compute the observation matric by combining A and B matrices
-Aall = [];
+Aall = [A B]; %n x (N+Nbeta)
 
 %declare x_mode as global so that we start subsequent optimisations from
 %the previous mode (speeds up nested optimisation).

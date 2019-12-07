@@ -1,3 +1,5 @@
+clear
+close all
 load("HA2_Brazil.mat")
 
 %extract observations, E and covariates
@@ -25,3 +27,7 @@ E_xy = x_mode;
 %you need to reuse some of the code from GMRF_negloglike_NG
 %to create inputs for this function call
 [~, ~, Q_xy] = gmrf_taylor(E_xy, ...);
+    
+
+E = Insurance(:,1);
+

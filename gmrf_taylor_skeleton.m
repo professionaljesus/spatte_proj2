@@ -26,7 +26,7 @@ if nargin<6, par=[]; end
 %compute observed part of the field
 z = A*x_0;
 %compute log( p(y|z,theta) )
-f = []; %log_p(y
+f = y.*log(E) + y.*z -E.*exp(z)-log(factorial(y)); %log_p(y
 
 %compute -log p(x|y,theta)
 logp = [] - sum(f);

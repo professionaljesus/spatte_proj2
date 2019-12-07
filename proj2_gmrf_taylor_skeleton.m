@@ -24,11 +24,7 @@ if nargin<6, par=[]; end
 z = A*x_0;
 senior_x = 
 %compute log( p(y|z,theta) )
-f = -log(factorial(y)) + y.*(log(E + z)) - E.*exp(z); %Poisson?
-g = 0;
-for i = 1:length(y)
-    g = g -log(facotrial(y(i))) + y(i)*z(i)+y(i)*log(E(i))-E(i)*exp(z(i));
-end
+f = y.*log(E) + y.*z -E.*exp(z)-log(factorial(y)); %log_p(y
 
 nabla_f = y - E.*exp(z);
 Hessian_f = spdiag(E.*exp(z));

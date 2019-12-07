@@ -22,24 +22,23 @@ if nargin<6, par=[]; end
 
 %compute observed part of the field
 z = A*x_0;
-senior_x = = 
 %compute log( p(y|z,theta) )
-f = -log(factorial(y)) + y.*(log(E + z)) - E.*exp(z); %Poisson?
+f = -log(factorial(y)) + y.*(log(E + z)) - E.*exp(z); %log_p(y
 
 nabla_f = y - E.*exp(z);
-Hessian_f = spdiag(E.*exp(z));
+Hessian_f = diag(E.*exp(z);
 %compute -log p(x|y,theta)
-logp = -(sum(f) + (y - z)'*nabla_f + 0.5*(y - z)'*Hessian_f*(y - z));
+logp = sum(f) + (y - z)'*nabla_f + 0.5*(y - z)'*Hessian_f*(y - z);
 
 if nargout>1
   %compute derivatives (if needed, i.e. nargout>1)
-  df = nabla_f;
+  df = y - E*exp(z);
   D_logp = [] - A'*df;
 end
 
 if nargout>2
   %compute hessian (if needed, i.e. nargout>2)
-  d2f = Hessian_f;
+  d2f = E*exp(z);
   n = size(A,1);
-  D2_logp = -Q - A'*spdiags(d2f,0,n,n)*A;
+  D2_logp = [] - A'*spdiags(d2f,0,n,n)*A;
 end

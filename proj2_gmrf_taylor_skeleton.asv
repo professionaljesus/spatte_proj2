@@ -42,7 +42,7 @@ if nargout>1
   %compute derivatives (if needed, i.e. nargout>1)
   df = nabla_f;
   D_logp = [] - A'*df;
-  D_logg = A'*(nabla_f-Hessian_f*A*x_0)-(Q-A'*Hessian_f*A)*x_0;
+  D_logg = A'*(nabla_f-Hessian_f*A)
 end
 
 if nargout>2
@@ -50,5 +50,4 @@ if nargout>2
   d2f = Hessian_f;
   n = size(A,1);
   D2_logp = -Q - A'*spdiags(d2f,0,n,n)*A;
-  D2_logg = A'*Hessian_f*A+Q;
 end

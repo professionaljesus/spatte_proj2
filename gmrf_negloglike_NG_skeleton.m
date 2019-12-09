@@ -33,7 +33,7 @@ Qbeta = 1e-6*speye(size(B,2));
 
 
 %combine all components of Q using blkdiag
-Qall = blkdiag(Q_x,pars(2)*eye(length(Q_x)),Qbeta);
+Qall = blkdiag(Q_x,pars(2)*speye(length(Q_x)),Qbeta);
 %also compute the observation matric by combining A and B matrices
 Aall = [A A B];
 
@@ -59,7 +59,7 @@ x_mode = fminNR(@(x) gmrf_taylor_skeleton(x, y, Aall, Qall, E), x_mode);
 %note that logp = -log_obs + x_mode'*Q*x_mode/2.
 
 %Compute choleskey factor of Q_xy
-[R_xy, p_xy] = chol(Q_xy);
+[R_xy, p_xy] = chol(Q_xy');
 if p_xy~=0
   %choleskey factor fail -> (almost) semidefinite matrix -> 
   %-> det(Q) ~ 0 -> log(det(Q)) ~ -inf -> negloglike ~ inf
@@ -68,9 +68,8 @@ if p_xy~=0
   return;
 end
 %also compute determinante of Qall (might be simplified)
-det_Q_all =  det(R_xy);
 %note that logp = -log_obs + x_mode'*Q*x_mode/2.
-negloglike = -logp -0.5*log(det_Q_all);
+negloglike = logp+0.5*sum(log(diag(R_xy)));
 
 %inverse reorder before returning
 x_mode(p) = x_mode;

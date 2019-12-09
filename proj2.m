@@ -19,7 +19,7 @@ x_mode = [];
 %attempt to estimate parameters (optim in optim...)
 %subset to only observed points here
 par = fminsearch( @(x) gmrf_negloglike_NG_skeleton(x, Y(I), A(I,:), ...
-B(I,:), G, E(I)), [1 9]);
+B(I,:), G, E(I)), [log(100000) log(1e-5)]);
 %conditional mean is now given be the mode
 E_xy = x_mode;
 

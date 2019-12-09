@@ -18,10 +18,10 @@ global x_mode;
 x_mode = [];
 %attempt to estimate parameters (optim in optim...)
 %subset to only observed points here
-par = fminsearch( @(x) gmrf_negloglike_NG_skeleton(x, Y(I), A(I,:), ...
-B(I,:), G, E(I)), [1 9]);
+par = fminsearch( @(x) gmrf_negloglike_NG_skeleton(x, Y(I), A(I,I), ...
+B(I,:), G(I,I), E(I)), [0.01 0.01]);
 %conditional mean is now given be the mode
-E_xy = x_mode;
+E_xy = x_mode;      
 
 %use the taylor  to compute posterior precision
 %you need to reuse some of the code from GMRF_negloglike_NG

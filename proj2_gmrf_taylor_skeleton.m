@@ -25,22 +25,20 @@ z = A*x_0;
 %compute log( p(y|z,theta) )
 f = y.*log(E) + y.*z -E.*exp(z)-log(factorial(y)); %log_p(y
 
-nabla_f = y - E.*exp(z);
-Hessian_f = spdiag(E.*exp(z));
-%compute -log p(x|y,theta)
-logp = -x_0'*A'*(nabla_f-Hessian_f*A*x_0)+0.5*x_0'*(Q-A'*Hessian_f*A)*x_0;%-(sum(f) + (y - z)'*nabla_f + 0.5*(y - z)'*Hessian_f*(y - z));
 
+%compute -log p(x|y,theta)
+logp = 0.5*x_0'*Q*x_0 - sum(f);
 %Ignore noise and senior_x 
 %senior_x = [A 
 if nargout>1
   %compute derivatives (if needed, i.e. nargout>1)
-  df = nabla_f;
+  df = y - E.*exp(z);
   D_logp = A'*(nabla_f-Hessian_f*A*x_0)-(Q-A'*Hessian_f*A)*x_0;
 end
 
 if nargout>2
   %compute hessian (if needed, i.e. nargout>2)
-  d2f = Hessian_f;
+  d2f = spdiag(-E.*exp(z));
   n = size(A,1);
   D2_logp = A'*Hessian_f*A+Q;
 end

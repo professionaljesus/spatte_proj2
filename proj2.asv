@@ -31,7 +31,6 @@ E_xy = x_mode;
 [~, ~, Q_xy] = gmrf_taylor_skeleton(E_xy,Y(I), [A(I,:) A(I,:) B(I,:)], blkdiag(par(1)*G,par(2)*eye(length(G)),1e-6*speye(size(B(I,:),2))));
 display('Fuck Kevin')
 
-e = [zeros(size(Q_xy,1)-size(B,2), size(B,2)); eye(size(B,2))];
+e = [zeros(size(Q_xy,1)-size(B,2), size(B,2); eye(size(B,2))];
 V_beta0 = e'*(Q_xy\e);
-beta = x_mode(end-9:end);
 

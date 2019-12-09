@@ -25,17 +25,13 @@ if nargin<6, par=[]; end
 
 %compute observed part of the field
 z = A*x_0;
-%
-% n = size(A,1);
-% nabla_f = y - E.*exp(z);
-% d2f = min(-E.*exp(z),0);
-% Hessian_f = spdiags(d2f,0,n,n);
 
 %compute log( p(y|z,theta) )
-f =  y.*z -E.*exp(z)+ y.*log(E);%-log(factorial(y) + y.*log(E)); %log_p(y
-%compute -log p(x|y,theta)
+f = y.*log(E) + y.*z - E.*exp(z) - sum(log(1:y));%y.*log(E) + y.*z -E.*exp(z)-log(factorial(y)) %log_p(y
+
 %logp = -x_0'*A'*(nabla_f-Hessian_f*A*x_0)+0.5*x_0'*(Q-A'*Hessian_f*A)*x_0;
 logp = 0.5*x_0'*Q*x_0- sum(f);
+
 
 if nargout>1
   %compute derivatives (if needed, i.e. nargout>1)
@@ -47,7 +43,7 @@ end
 
 if nargout>2
   %compute hessian (if needed, i.e. nargout>2)
-   d2f = min(-E.*exp(z),0);
+   d2f = -E.*exp(z);
    n = size(A,1);
 %   D2_logp = A'*Hessian_f*A-Q;
   D2_logp = Q - A'*spdiags(d2f,0,n,n)*A;

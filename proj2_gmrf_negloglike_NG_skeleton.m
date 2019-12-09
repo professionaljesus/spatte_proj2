@@ -18,7 +18,7 @@ function negloglike = proj2_gmrf_negloglike_NG_skeleton(theta, y, A, B, G, E)
 
 
 %ensure that E=1 if E not given (i.e. same/no population weight in all regions)
-if nargin<9, E=1; end
+if nargin<6, E=1; end
 
 %extract parameters (and transform to natural parameters)
 [tau, q_e] = exp(theta);

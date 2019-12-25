@@ -27,17 +27,14 @@ if nargin<6, par=[]; end
 z = A*x_0;
 
 %compute log( p(y|z,theta) )
-f = y.*log(E) + y.*z - E.*exp(z) - sum(log(1:y));%y.*log(E) + y.*z -E.*exp(z)-log(factorial(y)) %log_p(y
+f = y.*log(E) + y.*z - E.*exp(z) - sum(log(1:y)); %log_p(y
 
-%logp = -x_0'*A'*(nabla_f-Hessian_f*A*x_0)+0.5*x_0'*(Q-A'*Hessian_f*A)*x_0;
 logp = 0.5*x_0'*Q*x_0- sum(f);
 
 
 if nargout>1
   %compute derivatives (if needed, i.e. nargout>1)
   df = y-E.*exp(z);
-  %D_logp = A'*(nabla_f-Hessian_f*A*x_0)-(Q-A'*Hessian_f*A)*x_0;
-
   D_logp = Q*x_0 - A'*df;
 end
 
@@ -45,6 +42,5 @@ if nargout>2
   %compute hessian (if needed, i.e. nargout>2)
    d2f = -E.*exp(z);
    n = size(A,1);
-%   D2_logp = A'*Hessian_f*A-Q;
   D2_logp = Q - A'*spdiags(d2f,0,n,n)*A;
 end

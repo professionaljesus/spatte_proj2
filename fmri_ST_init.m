@@ -68,7 +68,7 @@ iXX_33 = [0 0 1]*( (Xa'*Xa)\[0;0;1] );
 %Here we have used that t-quantile is roughly a lambda quantile if f>100.
 %To account for the fact that we're testing all the pixels we adjust the
 %significans level using a Bonferoni correction;
-alpha = ?;
+alpha = 0.05;
 %find pixels which are larger than the adjusted alpha
 I_significant = abs(beta_OLS(:,:,3)) > norminv(1-alpha)*sqrt(iXX_33*s2_OLS);
 

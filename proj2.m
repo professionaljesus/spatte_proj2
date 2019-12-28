@@ -20,7 +20,7 @@ x_mode = [];
 %subset to only observed points here
 
 par = fminsearch( @(x) gmrf_negloglike_NG_skeleton(x, Y(I), A(I,:), ...
-B(I,:), G, E(I)), [log(100000) log(0.00001)]);
+B(I,:), G, E(I)), [log(100000) log(0.000001)]);
 
 %conditional mean is now given be the mode
 E_xy = x_mode;      
@@ -33,5 +33,8 @@ display('Fuck Kevin')
 
 e = [zeros(size(Q_xy,1)-size(B,2), size(B,2)); eye(size(B,2))];
 V_beta0 = e'*(Q_xy\e);
-beta = x_mode(end-9:end);
+beta = x_mode(end-8:end);
 
+kwer = length(A);
+plotMap(BrazilMap, [zeros(kwer,kwer) A zeros(kwer,9)]*x_mode, 'none')
+colorbar

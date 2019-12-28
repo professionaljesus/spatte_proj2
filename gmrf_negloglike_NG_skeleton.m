@@ -75,7 +75,7 @@ det_Q_all = sum(log(diag(test_xy)))+length(G)*log(pars(2))+length(B)*log(10^-6);
 
 
 %note that logp = -log_obs + x_mode'*Q*x_mode/2.
-negloglike = logp +sum(log(diag(R_xy)))-det_Q_all;
+negloglike = logp +sum(log(diag(R_xy)))-0.5*det_Q_all+0.5*x_mode'*Qall*x_mode;
 
 %inverse reorder before returning
 x_mode(p) = x_mode;

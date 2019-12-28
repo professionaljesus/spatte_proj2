@@ -31,17 +31,17 @@ for i=1:8
 end
 
 %and compare to covariates
-figure
-for i=4:length(InsuranceNames)
-	subplot(3,3,i-3)
-	plot(Insurance(:,i),log_risk, '.')
-	axis tight
-	title( InsuranceNames{i} )
-end
+% figure
+% for i=4:length(InsuranceNames)
+% 	subplot(3,3,i-3)
+% 	plot(Insurance(:,i),log_risk, '.')
+% 	axis tight
+% 	title( InsuranceNames{i} )
+% end
 
 %illustrate sparsity (matrices already have near-optimal order)
-figure
-subplot(121)
-spy(G)
-subplot(122)
-spy(G*G)
+% figure
+% subplot(121)
+% spy(G)
+% subplot(122)
+% spy(G*G)

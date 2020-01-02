@@ -13,6 +13,12 @@ beta = reshape(beta', sz(1), sz(2), []);
 [y_beta, ~, P_beta] = pca(colstack(beta));
 y_beta = reshape(y_beta, sz(1), sz(2), []);
 
+recon = colstack(beta)*X';
+recon = reshape(recon, sz(1), sz(2), []);
+eps = img - recon;
+
+%%
+
 %lets plot the pca components
 figure
 subplot(3,4,1)

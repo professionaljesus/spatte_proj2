@@ -16,31 +16,18 @@ for i = 1:8874
     if mod(i,88) == 0 || i == 1
         up = i;
     end
-    
     down = i + 1;
     if mod(i, 87) == 0
         down = i;
     end
     
+    
+    
+    
     left = i - 87;
-    if i < 88
-        left = i;
-    end
-    
+    if i <
     right = i + 87;
-    if i > 8787
-        right = i;
-    end
-    
-    G(i,up) = G(i,up) - 1;
-    G(i,down) = G(i,down) - 1;
-    G(i,left) = G(i,left) - 1;
-    G(i,right) = G(i,right) - 1;
-
 end
-
-tau = 1;
-Q = tau * G;
 
 %Gibb loop
 

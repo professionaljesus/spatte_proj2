@@ -6,11 +6,11 @@ alpha = 0.1;
 z0 = randn(120,120,2);
 [z,Mz,Mf] = mrf_sim(z0,N2,alpha,beta,100);
 
-  for iter=1:10
+for iter=1:10
     z = mrf_sim(z,N1,alpha,beta,100);
     image(rgbimage(z))
     drawnow
-  end
+end
 
 
 % [z,Mz,Mf,Mzf]=mrf_sim(z0,N,alpha,beta,iter,gt)

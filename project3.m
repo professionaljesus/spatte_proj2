@@ -15,28 +15,34 @@ right = 0;
 for i = 1:8874
     up = i - 1;
     if mod(i,88) == 0 || i == 1
-        up = i;
+        G(i,i) = G(i,i) - 1;
+    else
+        G(i,up) = G(i,up) - 1;
     end
+
     
     down = i + 1;
     if mod(i, 87) == 0
-        down = i;
+        G(i,i) = G(i,i) - 1;
+    else
+        G(i,down) = G(i,down) - 1;
     end
     
     left = i - 87;
     if i < 88
-        left = i;
+        G(i,i) = G(i,i) - 1;
+    else
+        G(i,left) = G(i,left) - 1;
     end
     
     right = i + 87;
     if i > 8787
-        right = i;
+        G(i,i) = G(i,i) - 1;
+    else
+        G(i,right) = G(i,right) - 1;
     end
     
-    G(i,up) = G(i,up) - 1;
-    G(i,down) = G(i,down) - 1;
-    G(i,left) = G(i,left) - 1;
-    G(i,right) = G(i,right) - 1;
+    
 
 end
 

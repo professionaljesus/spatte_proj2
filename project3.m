@@ -3,6 +3,7 @@ clear
 close all
 load fmri.mat
 
+Xa = [X(:,1:2) sum(X(:,3:end),2)];
 
 col_img = colstack(img);
 G = 4*speye(8874,8874);
@@ -42,6 +43,9 @@ end
 tau = 1;
 Q = tau * G;
 
+Y = img(:);
+sz = size(img);
+A = kron(Xa, speye(sz(1)*sz(2)));
 %Gibb loop
 
 

@@ -54,15 +54,12 @@ A = kron(Xa,speye(8874,8874));
 %init values
 tq = [0.1 0.1 0.1];
 te = 0.1;
-
-tau_hist = zeros(Nim,1);
-Nim = 2;
+Nim = 100;
+tau_hist = zeros(Nim,3);
+epsilon_hist = zeros(Nim,1);
+beta_hist = zeros(Nim,26622);
 for i = 1:Nim
-    
-    
-    Q = kron(diag(tq), G);
-
-    
+    Q = kron(sparse(diag(tq)), G);
     Q_e = spdiags(kron(ones(length(Y),1),te),0,1419840,1419840);
     Q_xy = Q+A'*Q_e*A;
     
@@ -71,23 +68,41 @@ for i = 1:Nim
     A_p = A(:,p);
     Y_p = Y(p);
     
-    X = R \ randn(size(R,1),1);
-    EX = R \ (A_p'*Q_e*Y);
+%     EX = R \ (A_p'*Q_e*Y_p);
+    EX = R\((A_p'*Q_e*Y)'/R)';
     x_samp = EX + R\randn(size(R,1),1);
     x_samp(p) = x_samp;
-    EX(p) = EX;
     
-    
-    % tau
-    N = length(Q_xy);
+    % tq1
+    N = length(G);
     shape = N/2 + 1;
-    scale = 2/(x_samp(1:end-1)'*Q_xy*x_samp(1:end-1));
-    tau = gamrnd(shape, scale);
-    tau_hist(i,1) = tau;
+    scale = 2/(x_samp(1:8874)'*G*x_samp(1:8874));
+    tq_1 = gamrnd(shape, scale);
     
+    %tq2
+    scale = 2/(x_samp(8875:17748)'*G*x_samp(8875:17748));
+    tq_2 = gamrnd(shape, scale);
     
+    %tq3
+    scale = 2/(x_samp(17749:end)'*G*x_samp(17749:end));
+    tq_3 = gamrnd(shape, scale);
+    tq = [tq_1 tq_2 tq_3];
+    tau_hist(i,:) = tq';
+    
+%     te / test
+    N = length(Q_e);
+    shape = N/2 + 1;
+    e_sample = Y-A*x_samp;
+    scale = 2/(e_sample'*e_sample);
+    
+%     scale = 2/(x_samp'*x_samp);
+    
+    te = gamrnd(shape, scale);
+    epsilon_hist(i,1) = te;
+    i
 end
 
+TT = reshape(x_samp, [87, 102,3]);
 
 
 %Posterior expectation/variance

@@ -55,13 +55,28 @@ A = speye(8874);
 tq = [0.1 0.1 0.1];
 te = 0.1*ones(size(Y));
 
-for i = 1:1
-    Q_0 = kron(diag(tq), G);
-    p = amd(Q_0);
+
+Nim = 2000;
+for i = 1:Nim
+    
+    
+    
+    
+    
+    Q = kron(diag(tq), G);
+    p = amd(Q);
     A_p = A(:,p);
-    R = chol(Q_0(p,p));
+    R = chol(Q(p,p));
+    
+    Q_e = diag(kron(ones(length(img),1),
+    E_XY =
+    Q_XY =
+    
     X = R \ randn(size(R,1),1);
     EX = R \ (R' \ (A_p'*Y));
+    
+    
+    
 end
 
 

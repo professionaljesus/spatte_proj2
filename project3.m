@@ -54,9 +54,9 @@ A = kron(Xa,speye(8874,8874));
 %init values
 tq = [0.1 0.1 0.1];
 te = 0.1;
-
-tau_hist = zeros(Nim,1);
-Nim = 2;
+Nim = 200;
+tau_hist = zeros(Nim,3);
+epsilon_hist = zeros(Nim,1);
 for i = 1:Nim
     
     
@@ -78,14 +78,32 @@ for i = 1:Nim
     EX(p) = EX;
     
     
-    % tau
-    N = length(Q_xy);
+    % tq
+    N = length(Q_xy)/3;
     shape = N/2 + 1;
-    scale = 2/(x_samp(1:end-1)'*Q_xy*x_samp(1:end-1));
-    tau = gamrnd(shape, scale);
-    tau_hist(i,1) = tau;
+    scale = 2/(x_samp(1:8874)'*G*x_samp(1:8874));
+    tq_1 = gamrnd(shape, scale);
+    tau_hist(i,1) = tq_1;
     
+    scale = 2/(x_samp(8875:17748)'*G*x_samp(8875:17748));
+    tq_2 = gamrnd(shape, scale);
+    tau_hist(i,2) = tq_2;
     
+    scale = 2/(x_samp(17749:end)'*G*x_samp(17749:end));
+    tq_3 = gamrnd(shape, scale);
+    tau_hist(i,3) = tq_3;
+    tq = [tq_1 tq_2 tq_3];
+    
+%     te / test
+    shape = length(Q_xy);
+    e_sample = Y-A*x_samp;
+    scale = 2/(e_sample'*e_sample);
+    
+%     scale = 2/(x_samp'*x_samp);
+    
+    te = gamrnd(shape, scale);
+    epsilon_hist(i,1) = te;
+    i
 end
 
 

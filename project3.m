@@ -45,8 +45,8 @@ G = sparse(G);
 Xa = [X(:,1:2) sum(X(:,3:end),2)];
 
 Y = colstack(col_img);
-sz = size(img);
-Akron = kron(Xa, speye(sz(1)*sz(2)));
+A = kron(Xa,speye(8874,8874));
+
 %Gibb loop
 
 
@@ -55,25 +55,35 @@ Akron = kron(Xa, speye(sz(1)*sz(2)));
 tq = [0.1 0.1 0.1];
 te = 0.1;
 
-
-Nim = 2000;
+tau_hist = zeros(Nim,1);
+Nim = 2;
 for i = 1:Nim
     
     
-    
-    
-    
     Q = kron(diag(tq), G);
-    p = amd(Q);
-    R = chol(Q(p,p));
+
     
     Q_e = spdiags(kron(ones(length(Y),1),te),0,1419840,1419840);
-    A = kron(Xa,speye(8874,8874));
-    Q_XY = Q+A'*Q_e*A;
+    Q_xy = Q+A'*Q_e*A;
+    
+    p = amd(Q_xy);
+    R = chol(Q_xy(p,p));
+    A_p = A(:,p);
+    Y_p = Y(p);
     
     X = R \ randn(size(R,1),1);
-    EX = R \ (R' \ (A_p'*Y));
+    EX = R \ (A_p'*Q_e*Y);
+    x_samp = EX + R\randn(size(R,1),1);
+    x_samp(p) = x_samp;
+    EX(p) = EX;
     
+    
+    % tau
+    N = length(Q_xy);
+    shape = N/2 + 1;
+    scale = 2/(x_samp(1:end-1)'*Q_xy*x_samp(1:end-1));
+    tau = gamrnd(shape, scale);
+    tau_hist(i,1) = tau;
     
     
 end

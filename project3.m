@@ -49,11 +49,11 @@ sz = size(img);
 Akron = kron(Xa, speye(sz(1)*sz(2)));
 %Gibb loop
 
-A = speye(8874);
+
 
 %init values
 tq = [0.1 0.1 0.1];
-te = 0.1*ones(size(Y));
+te = 0.1;
 
 
 Nim = 2000;
@@ -65,12 +65,11 @@ for i = 1:Nim
     
     Q = kron(diag(tq), G);
     p = amd(Q);
-    A_p = A(:,p);
     R = chol(Q(p,p));
     
-    Q_e = diag(kron(ones(length(img),1),
-    E_XY =
-    Q_XY =
+    Q_e = spdiags(kron(ones(length(Y),1),te),0,1419840,1419840);
+    A = kron(Xa,speye(8874,8874));
+    Q_XY = Q+A'*Q_e*A;
     
     X = R \ randn(size(R,1),1);
     EX = R \ (R' \ (A_p'*Y));

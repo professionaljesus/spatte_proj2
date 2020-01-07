@@ -58,6 +58,7 @@ Nim = 100;
 tau_hist = zeros(Nim,3);
 epsilon_hist = zeros(Nim,1);
 beta_hist = zeros(Nim,26622);
+
 for i = 1:Nim
     Q = kron(sparse(diag(tq)), G);
     Q_e = spdiags(kron(ones(length(Y),1),te),0,1419840,1419840);
@@ -92,6 +93,7 @@ for i = 1:Nim
 %     te / test
     N = length(Q_e);
     shape = N/2 + 1;
+
     e_sample = Y-A*x_samp;
     scale = 2/(e_sample'*e_sample);
     

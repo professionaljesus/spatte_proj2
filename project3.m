@@ -14,25 +14,25 @@ right = 0;
 for i = 1:8874
     up = i - 1;
     if mod(i,88) == 0 || i == 1
-        G(i,i) = G(i,i) - 0;
+        G(i,i) = G(i,i) - 1;
     else
         G(i,up) = G(i,up) - 1;
     end    
     down = i + 1;
     if mod(i, 87) == 0
-        G(i,i) = G(i,i) - 0;
+        G(i,i) = G(i,i) - 1;
     else
         G(i,down) = G(i,down) - 1;
     end
     left = i - 87;
     if i < 88
-        G(i,i) = G(i,i) - 0;
+        G(i,i) = G(i,i) - 1;
     else
         G(i,left) = G(i,left) - 1;
     end
     right = i + 87;
     if i > 8787
-        G(i,i) = G(i,i) - 0;
+        G(i,i) = G(i,i) - 1;
     else
         G(i,right) = G(i,right) - 1;
     end
@@ -49,15 +49,14 @@ A = kron(Xa,speye(8874,8874));
 
 %Gibb loop
 
-
-
 %init values
 tq = [0.1 0.1 0.1];
 te = 0.1*ones(8874,1);
 Nim = 100;
-tau_hist = zeros(Nim,3);
-epsilon_hist = zeros(Nim,8874);
-beta_hist = zeros(Nim,26622);
+tq_hist = zeros(3, Nim);
+te_hist = zeros(8874, Nim);
+beta_hist = zeros(26622, Nim);
+burnin = 10;
 
 for i = 1:Nim
     Q = kron(sparse(diag(tq)), G);
@@ -71,40 +70,68 @@ for i = 1:Nim
     
 %     EX = R \ (A_p'*Q_e*Y_p);
     EX = R\((A_p'*Q_e*Y)'/R)';
-    x_samp = EX + R\randn(size(R,1),1);
-    x_samp(p) = x_samp;
+    beta = EX + R\randn(size(R,1),1);
+    beta(p) = beta;
+    beta_hist(:, i) = beta;
     
     % tq1
     N = length(G);
     shape = N/2 + 1;
-    scale = 2/(x_samp(1:8874)'*G*x_samp(1:8874));
+    scale = 2/(beta(1:8874)'*G*beta(1:8874));
     tq_1 = gamrnd(shape, scale);
     
     %tq2
-    scale = 2/(x_samp(8875:17748)'*G*x_samp(8875:17748));
+    scale = 2/(beta(8875:17748)'*G*beta(8875:17748));
     tq_2 = gamrnd(shape, scale);
     
     %tq3
-    scale = 2/(x_samp(17749:end)'*G*x_samp(17749:end));
+    scale = 2/(beta(17749:end)'*G*beta(17749:end));
     tq_3 = gamrnd(shape, scale);
     tq = [tq_1 tq_2 tq_3];
-    tau_hist(i,:) = tq';
+    tq_hist(:,i) = tq;
     
 %     te / test
     N = length(Q_e);
     shape = N/2 + 1;
 
-    e_sample = Y-A*x_samp;
+    e_sample = Y-A*beta;
     for s = 1:8874
         scale = 2/(e_sample(s:8874:end)'*e_sample(s:8874:end));
         te(s,1) = gamrnd(shape, scale);
-        epsilon_hist(i,:) = te';
-
     end    
+    te_hist(:,i) = te;
+
     i
 end
+%%
+beta_mean = mean(beta_hist(:, burnin:end),2);
+beta3_mean = beta_mean(end - 8873:end,1);
+beta_recon = reshape(beta_mean, [87, 102 ,3]);
 
-TT = reshape(x_samp, [87, 102,3]);
+te_mean = mean(te_hist(:, burnin:end),2);
+tq_mean = mean(tq_hist(:, burnin:end),2);
+Q_recon = kron(sparse(diag(tq_mean)), G);
+Q_e_recon = spdiags(kron(ones(160,1),te_mean),0,1419840,1419840);
+Q_xy_recon = Q+A'*Q_e_recon*A;
+
+Y_recon = A*beta_mean;
+img_recon = reshape(Y_recon, [87, 102, 160]);
+
+diff = img - img_recon;
+
+
+%Variance boi
+p = amd(Q_xy_recon);
+R = chol(Q_xy_recon(p,p));
+
+beta_variance = zeros(length(R), 100);
+for i = 1:100
+    beta_variance(:,i) = R\randn(size(R,1),1);
+end
+beta_variance = mean(beta_variance,2);
+beta3_variance = beta_variance(end - 8873:end, 1);
+beta3_variance_recon = reshape(beta3_variance, [87, 102]);
+
 
 
 %Posterior expectation/variance
@@ -112,3 +139,26 @@ TT = reshape(x_samp, [87, 102,3]);
 
 
 %Significant pixel
+
+
+
+%%
+
+%Figures
+
+figure
+imagesc(beta_recon(:,:,3))
+title("Beta_3")
+
+figure
+for t = 1:160
+    subplot(131)
+    imagesc(img(:,:,t))
+    subplot(132)
+    imagesc(img_recon(:,:,t))
+    subplot(133)
+    imagesc(diff(:,:,t))
+    colorbar
+    drawnow
+    pause(0.1)
+end

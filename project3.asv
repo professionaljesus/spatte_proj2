@@ -144,8 +144,26 @@ residual_avreage = mean(residual_with_time(:,:, burnin:end),3);
 figure
 imagesc(residual_avreage);
 
+
+beta_variance = mean(beta_variance,2);
+beta3_mean = beta_mean(end - 8873:end,1);
+
+beta3_variance = beta_variance(end - 8873:end, 1);
+beta3_variance_recon = reshape(beta3_variance, [87, 102]);
+
+
+sig_img = ones(8874,1);
+for jj = 1:8874
+    if beta3_mean(jj,1) - 4.8272*sqrt(beta3_variance(jj,1))/sqrt(90) < 0 && ...
+            beta3_mean(jj,1) + 4.8272*sqrt(beta3_variance(jj,1))/sqrt(90) > 0
+        sig_img(jj) = 0;
+    end
+    
+end
+
+
 alpha_adj = 4.6721;
-I_significant = abs(beta_mean(17749:end)) > norminv(1-0.05/8775)*sqrt(abs(beta_variance(17749:end)));
+I_significant = abs(beta_OLS(:,:,3)) > norminv(1-0.05/8874)*sqrt(iXX_33*s2_OLS);
 
 
 

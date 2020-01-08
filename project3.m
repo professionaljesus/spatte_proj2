@@ -103,7 +103,6 @@ for i = 1:Nim
     
     te = gamrnd(shape, scale);
     epsilon_hist(i,1) = te;
-    i
 end
 
 

@@ -52,7 +52,7 @@ A = kron(Xa,speye(8874,8874));
 %init values
 tq = [0.1 0.1 0.1];
 te = 0.1*ones(8874,1);
-Nim = 100;
+Nim = 200;
 tq_hist = zeros(3, Nim);
 te_hist = zeros(8874, Nim);
 beta_hist = zeros(26622, Nim);
@@ -90,7 +90,7 @@ for i = 1:Nim
     tq = [tq_1 tq_2 tq_3];
     tq_hist(:,i) = tq;
     
-%     te / test
+    %te 
     N = 160;
     shape = N/2 + 1;
 
@@ -106,28 +106,45 @@ end
 %%
 beta_mean = mean(beta_hist(:, burnin:end),2);
 beta_recon = reshape(beta_mean, [87, 102 ,3]);
-
 te_mean = mean(te_hist(:, burnin:end),2);
+te_variance = std(te_hist');
 tq_mean = mean(tq_hist(:, burnin:end),2);
+
 Q_recon = kron(sparse(diag(tq_mean)), G);
 Q_e_recon = spdiags(kron(ones(160,1),te_mean),0,1419840,1419840);
 Q_xy_recon = Q_recon+A'*Q_e_recon*A;
 
-Y_recon = A*beta_mean;
-img_recon = reshape(Y_recon, [87, 102, 160]);
-
-diff = img - img_recon;
-
-%Variance boi
+% Variance boi
 p = amd(Q_xy_recon);
 R = chol(Q_xy_recon(p,p));
+A_p = A(:,p);
+
+beta_variance = R\randn(size(R,1),1);
+beta_expectation =  R\((A_p'*Q_e_recon*Y)'/R)';
+
+% beta_variance = zeros(length(R), 100);
+% for i = 1:100
+%     X = R\randn(size(R,1),1);
+%     beta_variance(:,i) = X(p);
+% end
+
+Y_recon = A*beta_mean;
+Y_diff = Y-Y_recon;
+
+img_recon = reshape(Y_recon, [87, 102, 160]);
+% diff = img - img_recon;
+
+%Study tau_e
+figure
+imagesc(reshape(te_mean,[87 102]));
+figure
+imagesc(reshape(te_variance',[87 102]));
+residual_with_time = reshape(Y_diff,[87 102 160]);
+residual_avreage = mean(residual_with_time(:,:, burnin:end),3);
+figure
+imagesc(residual_avreage);
 
 
-beta_variance = zeros(length(R), 100);
-for i = 1:100
-    X = R\randn(size(R,1),1);
-    beta_variance(:,i) = X(p);
-end
 beta_variance = mean(beta_variance,2);
 beta3_mean = beta_mean(end - 8873:end,1);
 

@@ -53,15 +53,15 @@ A = kron(Xa,speye(8874,8874));
 
 %init values
 tq = [0.1 0.1 0.1];
-te = 0.1;
+te = 0.1*ones(8874,1);
 Nim = 100;
 tau_hist = zeros(Nim,3);
-epsilon_hist = zeros(Nim,1);
+epsilon_hist = zeros(Nim,8874);
 beta_hist = zeros(Nim,26622);
 
 for i = 1:Nim
     Q = kron(sparse(diag(tq)), G);
-    Q_e = spdiags(kron(ones(length(Y),1),te),0,1419840,1419840);
+    Q_e = spdiags(kron(ones(160,1),te),0,1419840,1419840);
     Q_xy = Q+A'*Q_e*A;
     
     p = amd(Q_xy);
@@ -90,37 +90,17 @@ for i = 1:Nim
     tq = [tq_1 tq_2 tq_3];
     tau_hist(i,:) = tq';
     
-<<<<<<< HEAD
 %     te / test
     N = length(Q_e);
     shape = N/2 + 1;
-=======
-    % tq
-    N = length(Q_xy)/3;
-    shape = N/2 + 1;
-    scale = 2/(x_samp(1:8874)'*G*x_samp(1:8874));
-    tq_1 = gamrnd(shape, scale);
-    tau_hist(i,1) = tq_1;
-    
-    scale = 2/(x_samp(8875:17748)'*G*x_samp(8875:17748));
-    tq_2 = gamrnd(shape, scale);
-    tau_hist(i,2) = tq_2;
-    
-    scale = 2/(x_samp(17749:end)'*G*x_samp(17749:end));
-    tq_3 = gamrnd(shape, scale);
-    tau_hist(i,3) = tq_3;
-    tq = [tq_1 tq_2 tq_3];
-    
-%     te / test
-    shape = length(Q_xy);
->>>>>>> 4c44f967ac3200a75e26cf8280e7f13b0594c2e7
+
     e_sample = Y-A*x_samp;
-    scale = 2/(e_sample'*e_sample);
-    
-%     scale = 2/(x_samp'*x_samp);
-    
-    te = gamrnd(shape, scale);
-    epsilon_hist(i,1) = te;
+    for t = 1:160
+        scale = 2/(e_sample(t:8874:end)'*e_sample(t:8874:end));
+        te(t,1) = gamrnd(shape, scale);
+        epsilon_hist(i,t) = te;
+
+    end    
     i
 end
 

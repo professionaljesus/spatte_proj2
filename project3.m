@@ -53,15 +53,15 @@ A = kron(Xa,speye(8874,8874));
 
 %init values
 tq = [0.1 0.1 0.1];
-te = 0.1;
+te = 0.1*ones(8874,1);
 Nim = 100;
 tau_hist = zeros(Nim,3);
-epsilon_hist = zeros(Nim,1);
+epsilon_hist = zeros(Nim,8874);
 beta_hist = zeros(Nim,26622);
 
 for i = 1:Nim
     Q = kron(sparse(diag(tq)), G);
-    Q_e = spdiags(kron(ones(length(Y),1),te),0,1419840,1419840);
+    Q_e = spdiags(kron(ones(160,1),te),0,1419840,1419840);
     Q_xy = Q+A'*Q_e*A;
     
     p = amd(Q_xy);
@@ -95,12 +95,12 @@ for i = 1:Nim
     shape = N/2 + 1;
 
     e_sample = Y-A*x_samp;
-    scale = 2/(e_sample'*e_sample);
-    
-%     scale = 2/(x_samp'*x_samp);
-    
-    te = gamrnd(shape, scale);
-    epsilon_hist(i,1) = te;
+    for s = 1:8874
+        scale = 2/(e_sample(s:8874:end)'*e_sample(s:8874:end));
+        te(s,1) = gamrnd(shape, scale);
+        epsilon_hist(i,:) = te';
+
+    end    
     i
 end
 

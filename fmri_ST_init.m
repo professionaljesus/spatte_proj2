@@ -70,7 +70,7 @@ iXX_33 = [0 0 1]*( (Xa'*Xa)\[0;0;1] );
 %significans level using a Bonferoni correction;
 alpha = 0.05;
 %find pixels which are larger than the adjusted alpha
-I_significant = abs(beta_OLS(:,:,3)) > norminv(1-alpha)*sqrt(iXX_33*s2_OLS);
+I_significant2 = abs(beta_OLS(:,:,3)) > norminv(1-alpha)*sqrt(iXX_33*s2_OLS);
 
 %Plots illustrating the results
 figure
@@ -84,7 +84,7 @@ subplot(234)
 imagesc(s2_OLS)
 %significant beta_OLS_3 elements
 subplot(235)
-imagesc(I_significant)
+imagesc(I_significant2)
 %beta_OLS_3 field with significant pixels masked out
 subplot(236)
-imagesc(beta_OLS(:,:,3), 'alphadata', I_significant)
+imagesc(beta_OLS(:,:,3), 'alphadata', I_significant2)
